@@ -19,6 +19,9 @@
             "email": "dmytro.kuzmenko@bigcommerce.com"
         }
     ],
+    "repositories": [
+        { "type": "git", "url": "https://github.com/bc-luke/injector", "replace": { "bigcommerce/injector": "*" } }
+    ],
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {

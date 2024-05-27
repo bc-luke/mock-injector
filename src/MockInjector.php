@@ -1,9 +1,12 @@
 <?php
 namespace Bigcommerce\MockInjector;
 
+use Bigcommerce\Injector\Cache\InjectorReflectionCache;
 use Bigcommerce\Injector\Injector;
 use Bigcommerce\Injector\InjectorInterface;
+use Bigcommerce\Injector\Reflection\ClassInspector;
 use Bigcommerce\Injector\Reflection\ParameterInspector;
+use Bigcommerce\Injector\Reflection\ReflectionClassMap;
 use Prophecy\Exception\Prediction\AggregateException;
 use Prophecy\Prophecy\ObjectProphecy;
 use Prophecy\Prophet;
@@ -39,9 +42,11 @@ class MockInjector implements InjectorInterface
     ) {
         $this->mockingContainer = $mockingContainer ?? new ProphecyMockingContainer(new Prophet());
         if (!$injector) {
+            $parameterInspector = new ParameterInspector(new StaticArrayServiceCache());
             $injector = new Injector(
                 $this->mockingContainer,
-                new ParameterInspector(new StaticArrayServiceCache())
+                $parameterInspector,
+                new ClassInspector(new InjectorReflectionCache(), new ReflectionClassMap(50), $parameterInspector)
             );
         }
         $this->injector = $injector;
