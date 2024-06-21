@@ -9,10 +9,12 @@ use Bigcommerce\Injector\Cache\ServiceCacheInterface;
  * Test only "singleton" for MockInjector reflection.
  * This allows reflection between separate instances of the MockInjector created for each unit test (which otherwise
  * causes unnecessary reflection of classes that have already been inspected).
+ *
+ * @template T
  */
 class StaticArrayServiceCache implements ServiceCacheInterface
 {
-    /** @var  ArrayServiceCache */
+    /** @var ArrayServiceCache<T>|null */
     public static $cache;
     public function __construct()
     {
@@ -27,7 +29,7 @@ class StaticArrayServiceCache implements ServiceCacheInterface
      * @param string $key
      * @return mixed|false cached value or false when key not present in a cache
      */
-    public function get($key)
+    public function get(string $key): mixed
     {
         return self::$cache->get($key);
     }
@@ -39,7 +41,7 @@ class StaticArrayServiceCache implements ServiceCacheInterface
      * @param mixed $value
      * @return void
      */
-    public function set($key, $value)
+    public function set(string $key, mixed $value)
     {
         self::$cache->set($key, $value);
     }
@@ -50,8 +52,19 @@ class StaticArrayServiceCache implements ServiceCacheInterface
      * @param string $key
      * @return void
      */
-    public function remove($key)
+    public function remove($key): void
     {
         self::$cache->remove($key);
+    }
+
+    /**
+     * Check if a key exists in the cache.
+     *
+     * @param string $key
+     * @return bool
+     */
+    public function has(string $key): bool
+    {
+        return self::$cache->has($key);
     }
 }
